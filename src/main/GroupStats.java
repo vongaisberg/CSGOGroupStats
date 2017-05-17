@@ -11,24 +11,16 @@ import java.net.URL;
 
 /**
  * 
- * Uses the Steam Web-API to get some basic stats about players in a Steam group.
+ * Uses the Steam Web-API to get some basic CS:GO-statistics about players in a
+ * Steam group.
  * 
  * @author <a href="http://grunzwanzling.me">Maximilian von
- *         Gaisberg(Grunzwanzling)</a> [[SuppressWarningsSpartan]]
+ *         Gaisberg(Grunzwanzling)</a>
  */
 public class GroupStats {
 
-	/**
-	 * @throws IOException
-	 * @throws MalformedURLException
-	 */
 	public static void printGroupStats(String groupname) throws MalformedURLException, IOException {
-		long totalKills = 0;
-		long totalDeaths = 0;
-		long totalWins = 0;
-		long totalRounds = 0;
-		long totalMoney = 0;
-
+		long totalKills = 0, totalDeaths = 0, totalWins = 0, totalRounds = 0, totalMoney = 0;
 		String[] members;
 		String group = sendHTTPRequest(
 				new URL("http://steamcommunity.com/groups/" + groupname + "/memberslistxml/?xml=1"));
@@ -86,19 +78,17 @@ public class GroupStats {
 	public static String sendHTTPRequest(URL l) throws IOException {
 		System.setProperty("http.agent", "Chrome");
 		BufferedReader br = new BufferedReader(new InputStreamReader(l.openStream()));
-		String answer = "", line = "";
+		String $ = "", line = "";
 		while ((line = br.readLine()) != null)
-			answer += line + "\n";
+			$ += line + "\n";
 		br.close();
-		return answer;
+		return $;
 	}
 
 	private static int getStat(String key, String text) {
 		try {
 			int startIndex = text.indexOf(key) + key.length() + 1;
-			int kills = Integer.parseInt(text.substring(startIndex, text.indexOf("}", startIndex) - 1));
-
-			return kills;
+			return Integer.parseInt(text.substring(startIndex, text.indexOf("}", startIndex) - 1));
 		} catch (Exception e) {
 			return 0;
 		}
